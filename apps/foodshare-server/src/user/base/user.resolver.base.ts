@@ -35,6 +35,7 @@ import { Meal } from "../../meal/base/Meal";
 import { PaymentFindManyArgs } from "../../payment/base/PaymentFindManyArgs";
 import { Payment } from "../../payment/base/Payment";
 import { Building } from "../../building/base/Building";
+import { SignupInput } from "../SignupInput";
 import { UserService } from "../user.service";
 @common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
 @graphql.Resolver(() => User)
@@ -254,5 +255,13 @@ export class UserResolverBase {
       return null;
     }
     return result;
+  }
+
+  @graphql.Mutation(() => User)
+  async Signup(
+    @graphql.Args()
+    args: SignupInput
+  ): Promise<User> {
+    return this.service.Signup(args);
   }
 }
