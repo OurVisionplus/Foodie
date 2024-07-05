@@ -38,6 +38,7 @@ import { MealWhereUniqueInput } from "../../meal/base/MealWhereUniqueInput";
 import { PaymentFindManyArgs } from "../../payment/base/PaymentFindManyArgs";
 import { Payment } from "../../payment/base/Payment";
 import { PaymentWhereUniqueInput } from "../../payment/base/PaymentWhereUniqueInput";
+import { SignupInput } from "../SignupInput";
 
 @swagger.ApiBearerAuth()
 @common.UseGuards(defaultAuthGuard.DefaultAuthGuard, nestAccessControl.ACGuard)
@@ -702,5 +703,22 @@ export class UserControllerBase {
       data,
       select: { id: true },
     });
+  }
+
+  @common.Post("/signup")
+  @swagger.ApiOkResponse({
+    type: User,
+  })
+  @swagger.ApiNotFoundResponse({
+    type: errors.NotFoundException,
+  })
+  @swagger.ApiForbiddenResponse({
+    type: errors.ForbiddenException,
+  })
+  async Signup(
+    @common.Body()
+    body: SignupInput
+  ): Promise<User> {
+    return this.service.Signup(body);
   }
 }
