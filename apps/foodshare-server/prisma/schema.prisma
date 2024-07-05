@@ -1,0 +1,91 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Building {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  name      String?
+  updatedAt DateTime @updatedAt
+  users     User[]
+}
+
+model Payment {
+  amount    Float?
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  meal      Meal?    @relation(fields: [mealId], references: [id])
+  mealId    String?
+  updatedAt DateTime @updatedAt
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+}
+
+model Chat {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  message   String?
+  recipient String?
+  sender    String?
+  updatedAt DateTime @updatedAt
+}
+
+model Meal {
+  comments    Comment[]
+  createdAt   DateTime  @default(now())
+  description String?
+  id          String    @id @default(cuid())
+  ingredients Json?
+  likes       Like[]
+  payments    Payment[]
+  price       Float?
+  title       String?
+  updatedAt   DateTime  @updatedAt
+  user        User?     @relation(fields: [userId], references: [id])
+  userId      String?
+}
+
+model Comment {
+  content   String?
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  meal      Meal?    @relation(fields: [mealId], references: [id])
+  mealId    String?
+  updatedAt DateTime @updatedAt
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+}
+
+model Like {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  meal      Meal?    @relation(fields: [mealId], references: [id])
+  mealId    String?
+  updatedAt DateTime @updatedAt
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+}
+
+model User {
+  avatar     Json?
+  building   Building? @relation(fields: [buildingId], references: [id])
+  buildingId String?
+  comments   Comment[]
+  createdAt  DateTime  @default(now())
+  email      String?   @unique
+  firstName  String?
+  id         String    @id @default(cuid())
+  lastName   String?
+  likes      Like[]
+  meals      Meal[]
+  password   String
+  payments   Payment[]
+  roles      Json
+  updatedAt  DateTime  @updatedAt
+  username   String    @unique
+}
